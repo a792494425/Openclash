@@ -1,0 +1,430 @@
+# 机场订阅，名称不能重复
+proxy-providers:
+  Airport_01:
+    type: http
+    interval: 1800
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: 🟢 直连
+    url: "机场订阅"  # 请替换为您的机场订阅链接
+      
+# 用于下载订阅时指定UA
+global-ua: clash
+    
+# 全局配置
+port: 7890
+socks-port: 7891
+redir-port: 7892
+mixed-port: 7893
+tproxy-port: 7894
+ipv6: false
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+  
+geodata-mode: false
+geodata-loader: standard
+geo-auto-update: true
+geo-update-interval: 48
+geox-url:
+  geoip: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+  geosite: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+  mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+  
+# 控制面板
+external-controller: 0.0.0.0:9090
+secret: ""
+external-ui: ui
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
+
+# 匹配进程 always/strict/off
+find-process-mode: strict
+global-client-fingerprint: chrome
+keep-alive-idle: 600
+keep-alive-interval: 30
+
+# 策略组选择和fakeip缓存
+profile:
+  store-selected: true
+  store-fake-ip: true
+  
+# 流量嗅探
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  force-domain:
+    - +.v2ex.com
+  skip-domain:
+    - "dlg.io.mi.com"
+    - "+.push.apple.com"
+    - "+.apple.com"
+    
+# 代理模式
+tun:
+  enable: true
+  stack: mixed
+  mtu: 9000
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+  
+# DNS模块
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: false
+  respect-rules: true
+  # 模式切换 redir-host / fake-ip
+  enhanced-mode: fake-ip
+  fake-ip-range: 28.0.0.1/8
+  # 模式切换 whitelist/blacklist 
+  # 黑名单模式表示如果匹配成功则不返回 Fake-IP, 白名单模式时只有匹配成功才返回 Fake-IP
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - "+.lan"
+    - "+.local"
+    - geosite:private
+    - geosite:cn
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  proxy-server-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver-policy:
+    "rule-set:private_domain,cn_domain":
+    - 223.5.5.5
+    - 119.29.29.29
+    "rule-set:geolocation-!cn":
+      - "https://dns.cloudflare.com/dns-query"
+      - "https://dns.google/dns-query"
+ 
+   
+proxies:
+- name: "🟢 直连"
+  type: direct
+  udp: true
+
+# 规则提供者
+rule-providers:
+  Lan:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.list
+    behavior: domain
+  Custom_Direct:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/main/rule/Custom_Direct.list
+    behavior: domain
+  Custom_Proxy:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/main/rule/Custom_Proxy.list
+    behavior: domain
+  Direct:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Direct/Direct.list
+    behavior: domain
+  GoogleCNProxyIP:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleCNProxyIP.list
+    behavior: domain
+  Steam_CDN:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/main/rule/Steam_CDN.list
+    behavior: domain
+  Telegram:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.list
+    behavior: domain
+  Twitter:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Twitter/Twitter.list
+    behavior: domain
+  OpenAI:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.list
+    behavior: domain
+  Copilot:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot.list
+    behavior: domain
+  Claude:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Claude/Claude.list
+    behavior: domain
+  Gemini:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Gemini/Gemini.list
+    behavior: domain
+  GitHub:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GitHub/GitHub.list
+    behavior: domain
+  Speedtest:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Speedtest/Speedtest.list
+    behavior: domain
+  YouTube:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.list
+    behavior: domain
+  AppleTV:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/AppleTV/AppleTV.list
+    behavior: domain
+  Apple:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.list
+    behavior: domain
+  Microsoft:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.list
+    behavior: domain
+  XiaoMi:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/XiaoMi/XiaoMi.list
+    behavior: domain
+  GoogleFCM:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GoogleFCM/GoogleFCM.list
+    behavior: domain
+  Google:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.list
+    behavior: domain
+  TikTok:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/TikTok/TikTok.list
+    behavior: domain
+  Netflix:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.list
+    behavior: domain
+  Disney:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Disney/Disney.list
+    behavior: domain
+  HBO:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/HBO/HBO.list
+    behavior: domain
+  HBO_fix:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/refs/heads/main/rule/HBO_fix.list
+      behavior: domain
+  AmazonPrimeVideo:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/AmazonPrimeVideo/AmazonPrimeVideo.list
+    behavior: domain
+  Emby:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Emby/Emby.list
+    behavior: domain
+  Emby_Additional:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/ddgksf2013/Filter/refs/heads/master/Emby.list
+    behavior: domain
+  Spotify:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Spotify/Spotify.list
+    behavior: domain
+  Bahamut:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Bahamut/Bahamut.list
+    behavior: domain
+  NetEaseMusic:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/NetEaseMusic/NetEaseMusic.list
+    behavior: domain
+  ChinaMedia:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMedia/ChinaMedia.list
+    behavior: domain
+  IPTVMainland_Domain:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/refs/heads/main/rule/IPTVMainland_Domain.list
+      behavior: domain
+  GlobalMedia:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalMedia/GlobalMedia.list
+    behavior: domain
+  Amazon:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Amazon/Amazon.list
+      behavior: domain
+  AmazonIP:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/AmazonIP/AmazonIP.list
+      behavior: domain
+  Shopee:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Shopee/Shopee.list
+      behavior: domain
+  Shopify:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Shopify/Shopify.list
+      behavior: domain
+  Ozon:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/refs/heads/main/rule/Ozon.list
+      behavior: domain
+  Epic:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Epic/Epic.list
+      behavior: domain
+  EA:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/EA/EA.list
+      behavior: domain
+  Blizzard:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Blizzard/Blizzard.list
+      behavior: domain
+  UBI:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/UBI/UBI.list
+      behavior: domain
+  Sony:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Sony/Sony.list
+      behavior: domain
+  Nintendo:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nintendo/Nintendo.list
+      behavior: domain
+  Steam:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Steam/Steam.list
+      behavior: domain
+  ChinaDomain:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list
+    behavior: domain
+  ChinaCompanyIp:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list
+    behavior: ipcidr
+  ChinaIp:
+    type: http
+    interval: 28800
+    url: https://gh-proxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaIp.list
+    behavior: ipcidr
+  Download:
+      type: http
+      interval: 28800
+      url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Download/Download.list
+      behavior: domain
+# 锚点
+pr: &pr {type: select, proxies: [🚀 节点选择, 🔯 香港故转, 🔯 日本故转, ♻️ 香港自动, ♻️ 日本自动, ♻️ 美国自动, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🌐 全部节点, 🟢 直连]}
+# 策略组
+proxy-groups:
+  - {name: 🚀 节点选择, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, ♻️ 自动选择, 🔄 负载均衡(轮询), 🎲 负载均衡(散列), 🐢 低流量分组, 🔯 香港故转, 🔯 日本故转, ♻️ 香港自动, ♻️ 日本自动, ♻️ 美国自动, 🌐 全部节点, 🟢 直连]}
+  - {name: 📹 YouTube, type: select, proxies: [🇸🇬 新加坡节点, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🐢 低流量分组]}
+  - {name: 🍀 Google, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🎯 全球直连, 🐢 低流量分组]}
+  - {name: 🤖 ChatGPT, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🐢 低流量分组]}
+  - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🎯 全球直连, 🐢 低流量分组]}
+  - {name: 🐬 OneDrive, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🎯 全球直连, 🐢 低流量分组]}
+  - {name: 🪟 Microsoft, type: select, proxies: [🎯 全球直连, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🐢 低流量分组]}
+  - {name: 🎵 TikTok, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🎯 全球直连, 🐢 低流量分组]}
+  - {name: 📲 Telegram, type: select, proxies: [♻️ 自动选择, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, 🐢 低流量分组]}
+  - {name: 🎥 NETFLIX, type: select, proxies: [🇸🇬 新加坡节点, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🐢 低流量分组]}
+  - {name: ✈️ Speedtest, type: select, proxies: [🎯 全球直连, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🐢 低流量分组]}
+  - {name: 💶 PayPal, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🎯 全球直连, 🐢 低流量分组]}
+  - {name: 🍎 Apple, type: select, proxies: [🎯 全球直连, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🐢 低流量分组]}
+  - {name: 🎯 全球直连, type: select, proxies: [🟢 直连, 🚀 节点选择]}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇹🇼 台湾节点, 🇰🇷 韩国节点, 🇨🇦 加拿大节点, 🇬🇧 英国节点, 🇫🇷 法国节点, 🇩🇪 德国节点, 🇳🇱 荷兰节点, 🇹🇷 土耳其节点, 🇻🇳 越南节点, 🚀 节点选择, ♻️ 自动选择, 🎯 全球直连, 🐢 低流量分组]}
+  - {name: 🇭🇰 香港节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)港|hk|hongkong|hong kong", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: 🇯🇵 日本节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)日|jp|japan", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: 🇺🇲 美国节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)美|us|unitedstates|united states", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: 🔯 香港故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: 🔯 日本故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
+  - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|日|韩|新)).)*$", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(直连)).)*$", url: "https://cp.cloudflare.com/generate_204"}
+  - {name: 🌐 全部节点, type: select, include-all: true}
+  - {name: 🔄 负载均衡(轮询), type: load-balance, load-balance-behavior: round-robin, include-all: true }
+  - {name: 🎲 负载均衡(散列), type: load-balance, load-balance-behavior: consistent-hashing, include-all: true}
+  - {name: 🐢 低流量分组, type: url-test, include-all: true, filter: "(x0\.1|x0\.5|x1|x2|x3|x5)", url: "https://cp.cloudflare.com/generate_204"}
+rules:
+  - RULE-SET,Lan,🎯 全球直连
+  - RULE-SET,Custom_Direct,🎯 全球直连
+  - RULE-SET,Custom_Proxy,🚀 节点选择
+  - RULE-SET,Direct,🎯 全球直连
+  - GEOSITE,google-cn,🎯 全球直连
+  - RULE-SET,GoogleCNProxyIP,🚀 节点选择
+  - GEOSITE,steam@cn,🎯 全球直连
+  - RULE-SET,Steam_CDN,🎯 全球直连
+  - GEOSITE,category-public-tracker,🎯 全球直连
+  - RULE-SET,Telegram,📲 Telegram
+  - RULE-SET,Twitter,🕊️ Twitter(X)
+  - RULE-SET,OpenAI,💬 ChatGPT
+  - RULE-SET,Copilot,💬 Copilot
+  - RULE-SET,Claude,🤖 AI服务
+  - RULE-SET,Gemini,🤖 AI服务
+  - RULE-SET,GitHub,🚀 GitHub
+  - RULE-SET,Speedtest,🚀 
