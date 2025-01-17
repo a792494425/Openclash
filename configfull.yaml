@@ -8,7 +8,7 @@ proxy-providers:
       url: https://www.gstatic.com/generate_204
       interval: 300
     proxy: 🟢 直连
-    url: "机场订阅"  # 请替换为您的机场订阅链接
+    url: "http://47.79.36.142:3001/BhZkhqaZHfQFD5yQQo5w/download/collection/%E6%97%A0%E6%95%8C"  # 请替换为您的机场订阅链接
       
 # 用于下载订阅时指定UA
 global-ua: clash
