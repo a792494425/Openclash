@@ -79,11 +79,7 @@ const ZH = ['香港','澳门','台湾','日本','韩国','新加坡','美国','�
 // prettier-ignore
 const QC = ['Hong Kong','Macao','Taiwan','Japan','Korea','Singapore','United States','United Kingdom','France','Germany','Australia','Dubai','Afghanistan','Albania','Algeria','Angola','Argentina','Armenia','Austria','Azerbaijan','Bahrain','Bangladesh','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','British Virgin Islands','Brunei','Bulgaria','Burkina-faso','Burundi','Cambodia','Cameroon','Canada','CapeVerde','CaymanIslands','Central African Republic','Chad','Chile','Colombia','Comoros','Congo-Brazzaville','Congo-Kinshasa','CostaRica','Croatia','Cyprus','Czech Republic','Denmark','Djibouti','Dominican Republic','Ecuador','Egypt','EISalvador','Equatorial Guinea','Eritrea','Estonia','Ethiopia','Fiji','Finland','Gabon','Gambia','Georgia','Ghana','Greece','Greenland','Guatemala','Guinea','Guyana','Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Isle of Man','Israel','Italy','Ivory Coast','Jamaica','Jordan','Kazakstan','Kenya','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Lithuania','Luxembourg','Macedonia','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Mauritania','Mauritius','Mexico','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar(Burma)','Namibia','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','NorthKorea','Norway','Oman','Pakistan','Panama','Paraguay','Peru','Philippines','Portugal','PuertoRico','Qatar','Romania','Russia','Rwanda','SanMarino','SaudiArabia','Senegal','Serbia','SierraLeone','Slovakia','Slovenia','Somalia','SouthAfrica','Spain','SriLanka','Sudan','Suriname','Swaziland','Sweden','Switzerland','Syria','Tajikstan','Tanzania','Thailand','Togo','Tonga','TrinidadandTobago','Tunisia','Turkey','Turkmenistan','U.S.Virgin Islands','Uganda','Ukraine','Uruguay','Uzbekistan','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe','Andorra','Reunion','Poland','Guam','Vatican','Liechtensteins','Curacao','Seychelles','Antarctica','Gibraltar','Cuba','Faroe Islands','Ahvenanmaa','Bermuda','Timor-Leste'];
 const specialRegex = [
-  /(\d\.)?\d+×/,  // 匹配 1×, 0.1×, 10× 等
-  /(\d\.)?\d+X/i, // 匹配 1X, 0.1X, 10X 等
-  /X(\d\.)?\d+/i, // 匹配 X1, X0.1, X10 等
-  /(\d\.)?\d+x/i, // 匹配 1x, 0.1x, 10x 等
-  /x(\d\.)?\d+/i, // 匹配 x1, x0.1, x10 等
+  /(\d\.)?\d+×/,
   /IPLC|IEPL|Kern|Edge|Pro|Std|Exp|Biz|Fam|Game|Buy|Zx|LB|Game/,
 ];
 const nameclear =
@@ -91,9 +87,7 @@ const nameclear =
 // prettier-ignore
 const regexArray=[/ˣ²/, /ˣ³/, /ˣ⁴/, /ˣ⁵/, /ˣ⁶/, /ˣ⁷/, /ˣ⁸/, /ˣ⁹/, /ˣ¹⁰/, /ˣ²⁰/, /ˣ³⁰/, /ˣ⁴⁰/, /ˣ⁵⁰/, /IPLC/i, /IEPL/i, /核心/, /边缘/, /高级/, /标准/, /实验/, /商宽/, /家宽/, /游戏|game/i, /购物/, /专线/, /LB/, /cloudflare/i, /\budp\b/i, /\bgpt\b/i,/udpn\b/];
 // prettier-ignore
-const valueArray = [
-  "2×", "3×", "4×", "5×", "6×", "7×", "8×", "9×", "10×", "20×", "30×", "40×", "50×",
-  "IPLC", "IEPL", "Kern", "Edge", "Pro", "Std", "Exp", "Biz", "Fam", "Game", "Buy", "Zx", "LB", "CF", "UDP", "GPT", "UDPN"];
+const valueArray= [ "2×","3×","4×","5×","6×","7×","8×","9×","10×","20×","30×","40×","50×","IPLC","IEPL","Kern","Edge","Pro","Std","Exp","Biz","Fam","Game","Buy","Zx","LB","CF","UDP","GPT","UDPN"];
 const nameblnx = /(高倍|(?!1)2+(x|倍)|ˣ²|ˣ³|ˣ⁴|ˣ⁵|ˣ¹⁰)/i;
 const namenx = /(高倍|(?!1)(0\.|\d)+(x|倍)|ˣ²|ˣ³|ˣ⁴|ˣ⁵|ˣ¹⁰)/i;
 const keya =
@@ -176,48 +170,35 @@ function operator(pro) {
   const BLKEYS = BLKEY ? BLKEY.split("+") : "";
 
   pro.forEach((e) => {
-    let bktf = false, ens = e.name;
-
+    let bktf = false, ens = e.name
     // 预处理 防止预判或遗漏
     Object.keys(rurekey).forEach((ikey) => {
       if (rurekey[ikey].test(e.name)) {
         e.name = e.name.replace(rurekey[ikey], ikey);
-        if (BLKEY) {
-          bktf = true;
-          let BLKEY_REPLACE = "",
-            re = false;
-          BLKEYS.forEach((i) => {
-            if (i.includes(">") && ens.includes(i.split(">")[0])) {
-              if (rurekey[ikey].test(i.split(">")[0])) {
-                e.name += " " + i.split(">")[0];
-              }
-              if (i.split(">")[1]) {
-                BLKEY_REPLACE = i.split(">")[1];
-                re = true;
-              }
-            } else {
-              if (ens.includes(i)) {
-                e.name += " " + i;
-              }
+      if (BLKEY) {
+        bktf = true
+        let BLKEY_REPLACE = "",
+        re = false;
+      BLKEYS.forEach((i) => {
+        if (i.includes(">") && ens.includes(i.split(">")[0])) {
+          if (rurekey[ikey].test(i.split(">")[0])) {
+              e.name += " " + i.split(">")[0]
             }
-            retainKey = re
-              ? BLKEY_REPLACE
-              : BLKEYS.filter((items) => e.name.includes(items));
-          });
+          if (i.split(">")[1]) {
+            BLKEY_REPLACE = i.split(">")[1];
+            re = true;
+          }
+        } else {
+          if (ens.includes(i)) {
+             e.name += " " + i
+            }
         }
+        retainKey = re
+        ? BLKEY_REPLACE
+        : BLKEYS.filter((items) => e.name.includes(items));
+      });}
       }
     });
-
-    // 提取倍率信息
-    let rateMatch = e.name.match(/(\d\.)?\d+(X|x|×)/i);
-    let rate = rateMatch ? rateMatch[0] : "";
-
-    // 保留倍率信息
-    if (rate) {
-      e.name = e.name.replace(rate, "").trim() + " " + rate;
-    }
-
-    // 其他逻辑保持不变
     if (blockquic == "on") {
       e["block-quic"] = "on";
     } else if (blockquic == "off") {
@@ -226,7 +207,7 @@ function operator(pro) {
       delete e["block-quic"];
     }
 
-    // 自定义逻辑
+    // 自定义
     if (!bktf && BLKEY) {
       let BLKEY_REPLACE = "",
         re = false;
@@ -257,7 +238,7 @@ function operator(pro) {
     // 正则 匹配倍率
     if (bl) {
       const match = e.name.match(
-        /((倍率|X|x|×)\D?((\d{1,3}\.)?\d+)\D?)|((\d{1,3}\.)?\d+)(倍|X|x|×)|(X(\d\.)?\d+)|(x(\d\.)?\d+)/i
+        /((倍率|X|x|×)\D?((\d{1,3}\.)?\d+)\D?)|((\d{1,3}\.)?\d+)(倍|X|x|×)/
       );
       if (match) {
         const rev = match[0].match(/(\d[\d.]*)/)[0];
@@ -268,10 +249,12 @@ function operator(pro) {
       }
     }
 
-    !GetK && ObjKA(Allmap);
+    !GetK && ObjKA(Allmap)
     // 匹配 Allkey 地区
-    const findKey = AMK.find(([key]) => e.name.includes(key));
-
+    const findKey = AMK.find(([key]) =>
+      e.name.includes(key)
+    )
+    
     let firstName = "",
       nNames = "";
 
@@ -303,7 +286,6 @@ function operator(pro) {
       }
     }
   });
-
   pro = pro.filter((e) => e.name !== null);
   jxh(pro);
   numone && oneP(pro);
