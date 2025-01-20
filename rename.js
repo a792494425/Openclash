@@ -42,15 +42,15 @@
 // const inArg = {'blkey':'iplc+GPT>GPTnewName+NF+IPLC', 'flag':true };
 const inArg = $arguments; // console.log(inArg)
 const nx = inArg.nx || false,
-  bl = inArg.bl || false,
+  bl = inArg.bl || true,
   nf = inArg.nf || false,
   key = inArg.key || false,
-  blgd = inArg.blgd || false,
-  blpx = inArg.blpx || false,
+  blgd = inArg.blgd || true,
+  blpx = inArg.blpx || true,
   blnx = inArg.blnx || false,
   numone = inArg.one || false,
   debug = inArg.debug || false,
-  clear = inArg.clear || false,
+  clear = inArg.clear || true,
   addflag = inArg.flag || false,
   nm = inArg.nm || false;
 
