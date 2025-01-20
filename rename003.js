@@ -72,9 +72,6 @@ const nx = false,      // 保留1倍率和不显示倍率的节点
   clear = false,      // 清理无用标识
   addflag = false,     // 添加国旗
   nm = false;         // 保留未匹配节点
-  addRateLabel: true,  // 新增：添加倍率标识
-  addHighRateLabel: true,  // 新增：添加高倍率标识
-  addLowRateLabel: true,   // 新增：添加低倍率标识
   
 const FGF = inArg.fgf == undefined ? " " : decodeURI(inArg.fgf),
   XHFGF = inArg.sn == undefined ? " " : decodeURI(inArg.sn),
