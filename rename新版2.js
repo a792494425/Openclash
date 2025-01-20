@@ -42,9 +42,8 @@
 const inArg = {
   'blnx': true,    // 保留高倍率
   'bllx': true,    // 保留低倍率
-  'blgd': true,    // 保留格式
   'blpx': true,    // 排序
-  'flag': true     // 添加国旗
+  'clear': true,    // 排序
   // ... 其他参数
 };
 
@@ -53,14 +52,14 @@ const nx = true,      // 保留1倍率和不显示倍率的节点
   bl = true,          // 匹配所有倍率
   nf = false,         // 前缀位置
   key = false,        // 关键词匹配
-  blgd = true,        // 保留格式
+  blgd = false,        // 保留格式
   blpx = true,        // 排序
   blnx = true,        // 保留高倍率
   bllx = true,        // 保留低倍率
   numone = false,     // 清理序号
   debug = false,      // 调试模式
-  clear = false,      // 清理无用标识
-  addflag = true,     // 添加国旗
+  clear = true,      // 清理无用标识
+  addflag = false,     // 添加国旗
   nm = false;         // 保留未匹配节点
 
 const FGF = inArg.fgf == undefined ? " " : decodeURI(inArg.fgf),
