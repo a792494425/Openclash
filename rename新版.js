@@ -237,17 +237,28 @@ function operator(pro) {
 
     // 正则 匹配倍率
     if (bl) {
+      console.log("正在处理节点名称：", e.name);
       const match = e.name.match(
-        /((倍率|X|x|×)\D?((\d{1,3}\.)?\d+)\D?)|((\d{1,3}\.)?\d+)(倍|X|x|×)/
+        /((倍率|X|x|×)\D?((\d{1,3}\.)?\d+)\D?)|((\d{1,3}\.)?\d+)(倍|X|x|×)|x(\d[\d.]*)/i
       );
       if (match) {
+        console.log("匹配到的倍率标识：", match[0]);
         const rev = match[0].match(/(\d[\d.]*)/)[0];
         if (rev !== "1") {
-          const newValue = rev + "×";
+          const newValue = rev + "×"; // 添加倍率符号
           ikey = newValue;
-        }
-      }
+
+      // 调试信息：打印保留的倍率标识
+         console.log("保留倍率标识：", ikey);
+       } else {
+      // 调试信息：倍率值为 1，不保留
+         console.log("倍率值为 1，不保留");
     }
+       } else {
+    // 调试信息：未匹配到倍率标识
+         console.log("未匹配到倍率标识");
+  }
+}
 
     !GetK && ObjKA(Allmap)
     // 匹配 Allkey 地区
