@@ -40,18 +40,16 @@
  */
 
 const inArg = {
-  'blgd': true,    // 保留格式
   'blpx': true,    // 排序
-  'flag': true     // 添加国旗
   // ... 其他参数
 };
 
-// const inArg = {'blkey':'限时+iplc+GPT>GPTnewName+NF+IPLC', 'flag':true };
-const nx = true,      // 保留1倍率和不显示倍率的节点
+// const inArg = {'blkey':'iplc+GPT>GPTnewName+NF+IPLC', 'flag':true };
+const nx = false,      // 保留1倍率和不显示倍率的节点
   bl = true,          // 匹配所有倍率
   nf = false,         // 前缀位置
   key = false,        // 关键词匹配
-  blgd = true,        // 保留格式
+  blgd = false,        // 保留格式
   blpx = true,        // 排序
   blnx = false,        // 保留高倍率
   bllx = false,        // 保留低倍率
