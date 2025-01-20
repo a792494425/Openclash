@@ -41,6 +41,9 @@
 
 // const inArg = {'blkey':'iplc+GPT>GPTnewName+NF+IPLC', 'flag':true };
 const inArg = $arguments; // console.log(inArg)
+  'bl': true,
+  'clear': true,
+
 const nx = inArg.nx || false,
   bl = inArg.bl || true,
   nf = inArg.nf || false,
