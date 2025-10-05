@@ -18,6 +18,20 @@
  * 使用方法: Sub-Store 脚本操作添加，参数使用 # 开头，多个参数用 & 连接
  * ====================================================================================================
  *
+ * 【参数语法说明 - 完全兼容 Sub-Store UI】
+ *
+ * 方式1: URL 直接使用 (推荐)
+ *   布尔参数: #flag&category&streaming
+ *   值参数:   #out=en&name=机场
+ *
+ * 方式2: Sub-Store UI 参数框 (必须使用 =)
+ *   布尔参数: flag=true&category=true&streaming=1
+ *   值参数:   out=en&name=机场
+ *
+ * 支持的布尔值: true, "true", 1, "1", on, "on", yes, "yes"
+ *
+ * ====================================================================================================
+ *
  * 【主要参数】
  * [in=]      自动判断节点名类型，优先级: zh(中文) -> flag(国旗) -> quan(英文全称) -> en(英文简写)
  *            可选值: zh/cn(中文), en/us(英文简写), flag/gq(国旗), quan(英文全称)
@@ -29,37 +43,41 @@
  * [fgf=]     节点名前缀或国旗分隔符，默认: 空格
  * [sn=]      国家与序号之间的分隔符，默认: 空格
  *
- * 【序号参数】
+ * 【序号参数】（支持 =true 或直接写参数名）
  * [one]      清理只有一个节点的地区的 "01" 序号
  * [flag]     给节点前面添加国旗
  *
  * 【前缀参数】
  * [name=]    节点添加机场名称前缀
- * [nf]       将 name= 的前缀值放在最前面
+ * [nf]       将 name= 的前缀值放在最前面（支持 =true）
  *
- * 【保留参数】
+ * 【保留参数】（支持 =true 或直接写参数名）
  * [blkey=]   保留关键词，用+号分隔多个，支持替换: GPT>新名字
  *            示例: blkey=IPLC+GPT>ChatGPT+Netflix+游戏
- * [blgd]     保留: 家宽、IPLC、倍率等固定格式标识 (默认开启)
- * [bl]       正则匹配保留倍率标识 [0.1x, x0.2, 6x, 3倍] (默认开启)
+ * [blgd]     保留: 家宽、IPLC、倍率等固定格式标识 (默认开启，可用 =false 关闭)
+ * [bl]       正则匹配保留倍率标识 [0.1x, x0.2, 6x, 3倍] (默认开启，可用 =false 关闭)
  * [nx]       保留1倍率节点与不显示倍率的节点
  * [blnx]     只保留高倍率节点
- * [clear]    清理乱名 (套餐、到期等无用信息) (默认开启)
- * [blpx]     对保留标识后的名称分组排序 (默认开启)
+ * [clear]    清理乱名 (套餐、到期等无用信息) (默认开启，可用 =false 关闭)
+ * [blpx]     对保留标识后的名称分组排序 (默认开启，可用 =false 关闭)
  * [nm]       保留没有匹配到的节点
  *
  * 【网络参数】
  * [blockquic] 是否阻止QUIC协议，可选: on(阻止), off(不阻止)
  *
- * 【新增参数 v2.0】
- * [category]  启用智能分类功能，自动添加节点类型标识
- * [streaming] 启用流媒体平台识别
- * [gaming]    启用游戏优化节点识别
- * [ai]        启用AI服务节点识别
+ * 【新增参数 v2.0】（完全支持 =true 语法）
+ * [category]  启用智能分类功能，自动添加节点类型标识（可用 category=true）
+ * [streaming] 启用流媒体平台识别（可用 streaming=true 或 streaming=1）
+ * [gaming]    启用游戏优化节点识别（可用 gaming=true）
+ * [ai]        启用AI服务节点识别（可用 ai=true）
  *
- * 【使用示例】
- * https://example.com/rename-enhanced.js#flag&blkey=GPT+Netflix&category&out=zh
+ * 【使用示例 - URL 方式】
+ * https://example.com/rename-enhanced.js#flag&category&streaming&out=zh
  * https://example.com/rename-enhanced.js#flag&one&clear&streaming&gaming
+ *
+ * 【使用示例 - Sub-Store UI 参数框】
+ * flag=true&category=true&streaming=true&gaming=1&out=en
+ * flag=1&category=on&streaming=yes&ai=true&name=机场
  *
  * ====================================================================================================
  */
@@ -71,26 +89,42 @@
 const inArg = $arguments;
 const debug = inArg.debug || false;
 
-// 功能开关参数
+/**
+ * 智能布尔值解析 - 兼容 Sub-Store UI 的参数格式
+ * 支持: true, "true", "1", 1, "on", "yes" 都视为 true
+ * @param {*} value 参数值
+ * @returns {boolean} 布尔值
+ */
+function parseBool(value) {
+  if (value === undefined || value === null || value === false || value === "") return false;
+  if (value === true || value === 1) return true;
+  if (typeof value === 'string') {
+    const lower = value.toLowerCase();
+    return lower === 'true' || lower === '1' || lower === 'on' || lower === 'yes';
+  }
+  return Boolean(value);
+}
+
+// 功能开关参数 - 兼容 Sub-Store UI 的 =true 语法
 const CONFIG = {
   // 保留和过滤参数
-  nx: inArg.nx || false,           // 保留1倍率
-  bl: inArg.bl !== undefined ? inArg.bl : true,  // 保留倍率标识
-  nf: inArg.nf || false,           // 前缀在最前
-  key: inArg.key || false,         // 关键词过滤
-  blgd: inArg.blgd !== undefined ? inArg.blgd : true,  // 保留固定格式
-  blpx: inArg.blpx !== undefined ? inArg.blpx : true,  // 分组排序
-  blnx: inArg.blnx || false,       // 只保留高倍率
-  numone: inArg.one || false,      // 清理单节点序号
-  clear: inArg.clear !== undefined ? inArg.clear : true,  // 清理乱名
-  addflag: inArg.flag || false,    // 添加国旗
-  nm: inArg.nm || false,           // 保留未匹配节点
+  nx: parseBool(inArg.nx),           // 保留1倍率
+  bl: inArg.bl !== undefined ? parseBool(inArg.bl) : true,  // 保留倍率标识
+  nf: parseBool(inArg.nf),           // 前缀在最前
+  key: parseBool(inArg.key),         // 关键词过滤
+  blgd: inArg.blgd !== undefined ? parseBool(inArg.blgd) : true,  // 保留固定格式
+  blpx: inArg.blpx !== undefined ? parseBool(inArg.blpx) : true,  // 分组排序
+  blnx: parseBool(inArg.blnx),       // 只保留高倍率
+  numone: parseBool(inArg.one),      // 清理单节点序号
+  clear: inArg.clear !== undefined ? parseBool(inArg.clear) : true,  // 清理乱名
+  addflag: parseBool(inArg.flag),    // 添加国旗
+  nm: parseBool(inArg.nm),           // 保留未匹配节点
 
-  // v2.0 新增功能开关
-  enableCategory: inArg.category || false,   // 智能分类
-  enableStreaming: inArg.streaming || false, // 流媒体识别
-  enableGaming: inArg.gaming || false,       // 游戏节点识别
-  enableAI: inArg.ai || false                // AI服务识别
+  // v2.0 新增功能开关 - 完全支持 Sub-Store UI 格式
+  enableCategory: parseBool(inArg.category),   // 智能分类
+  enableStreaming: parseBool(inArg.streaming), // 流媒体识别
+  enableGaming: parseBool(inArg.gaming),       // 游戏节点识别
+  enableAI: parseBool(inArg.ai)                // AI服务识别
 };
 
 // 分隔符配置
